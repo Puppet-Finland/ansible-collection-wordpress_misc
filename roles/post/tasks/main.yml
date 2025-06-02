@@ -1,1 +1,29 @@
 ---
+- name: Enable Web Traffic in Firewalld
+  ansible.posix.firewalld:
+    service: "{{ item }}"
+    permanent: true
+    state: enabled
+    immediate: yes
+  with_items:
+    - http
+    - https
+
+# INFO: This is to fix SELinux issues with wordpress module using a socket and php-fpm.
+- name: Replace DB_HOST line in wp-config.php
+  ansible.builtin.lineinfile:
+    path: "{{ docroot }}/wp-config.php"
+    regexp: "^define\\( 'DB_HOST', .*\\);"
+    line: "define( 'DB_HOST', '127.0.0.1' );"
+    backup: no
+
+# TODO: add our config overrides & reload daemon
+
+- name: Restart Web Services
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: restarted
+  with_items:
+    - php-fpm
+    - httpd
+    - nginx

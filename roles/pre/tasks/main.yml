@@ -1,1 +1,4 @@
 ---
+- name: Enable and configure SELinux
+  ansible.builtin.include_tasks: selinux.yml
+  when: ansible_selinux.status == "enabled"

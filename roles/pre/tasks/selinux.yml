@@ -1,0 +1,14 @@
+---
+# INFO: This is a fix for some chicken/egg problem with /run/nginx.pid SELinux labeling.
+- name: Enable SELinux
+  ansible.posix.selinux:
+    policy: targeted
+    state: permissive
+
+# INFO: This is redundant because wordpress module supposedly adds these.
+- name: Set SELinux booleans
+  ansible.posix.seboolean:
+    name: "{{ item }}"
+    state: true
+    persistent: true
+  with_items: "{{ selinux_booleans }}"

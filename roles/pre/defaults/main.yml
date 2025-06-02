@@ -1,0 +1,7 @@
+selinux_enabled: "{{ ansible_selinux.status }}"
+selinux_booleans:
+  - httpd_setrlimit
+  - httpd_execmem
+  - httpd_can_network_connect
+  - httpd_can_network_connect_db
+  - httpd_read_user_content
